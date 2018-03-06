@@ -11,10 +11,6 @@ class FilmExplorer extends Component {
     this.state = {
       searchTerm: '',
       sortType: 'title',
-      movies: [],
-    };
-
-    this.state = {
       movies: movieData,
     };
   }
