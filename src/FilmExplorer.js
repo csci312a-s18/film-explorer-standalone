@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import movieData from './movies.json';
 import MovieTableContainer from './components/MovieTableContainer';
 import SearchBar from './components/SearchBar';
 
@@ -11,8 +10,22 @@ class FilmExplorer extends Component {
     this.state = {
       searchTerm: '',
       sortType: 'title',
-      movies: movieData,
+      movies: [],
     };
+  }
+
+  componentDidMount() {
+    fetch('/api/movies/')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.status_text);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        this.setState({ movies: data });
+      })
+      .catch(err => console.log(err)); // eslint-disable-line no-console
   }
 
   setRating(filmid, rating) {
@@ -27,7 +40,7 @@ class FilmExplorer extends Component {
 
   render() {
     let movieContents = (<h2>Loading...</h2>);
-    if (this.state.movies) {
+    if (this.state.movies.length > 0) {
       movieContents = (<MovieTableContainer
         searchTerm={this.state.searchTerm}
         movies={this.state.movies}
